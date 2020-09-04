@@ -1,14 +1,16 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import {fetchProductDetails} from '../utilities/api';
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 
 interface AppProps {
     products: string[],
     cart: string[],
-    addCart: (e: string[]) => void
+    addCart: (e: string[]) => void,
+    changeHeader: (e: string) => void
 }
 export const Product: React.FC<AppProps> = (props) => {
-   let propsData: any = props;
+  const history = useHistory();
+  let propsData: any = props;
 
   const [cart,setProdToCart] = useState(props.cart || []);
   const [product, setProduct] = useState({
@@ -28,21 +30,16 @@ export const Product: React.FC<AppProps> = (props) => {
             ...product,
             ...response
         });
+        props.changeHeader(response.title)
     });
 
   },[]);
 
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) =>{
-    //setProd(e.currentTarget.value);
-  }
-
   const addToCart = (e: any) =>{
     props.addCart(e.currentTarget.id);
+    history.push('/cart');
   }
 
-
-
-console.log(product,"s")
   return (
     <>
 		<div className="container app-body">
@@ -57,7 +54,7 @@ console.log(product,"s")
                             <div className={'label'}>Page Count: {product.pageCount}</div>
                             <div className={'label'}>ISBN: {product.isbn}</div>
                             <button className={'product-container-details-cart-btn'} id={product.id} onClick={addToCart}>Add to Cart</button>
-                            <Link className={'product-container-details-buy-btn'} id={product.id} to={'/myorders'}>Buy Now</Link>
+                            <Link className={'product-container-details-buy-btn'} id={product.id} to={'/cart'}>Buy Now</Link>
                             <p>{product.description}</p>
                         </div>
                     </div>    

@@ -8,6 +8,17 @@ export const addToCartAction = (cart: string[]):Action =>({
     payload: cart
 });
 
+/** Reset Cart */
+type ResetAction = {
+    type:'RESET_CART',
+    payload: string[]
+}
+export const resetCartAction = (cart: string[]):ResetAction =>({
+    type:'RESET_CART',
+    payload: cart
+});
+
+
 
 /** fetch books */
 
@@ -34,3 +45,13 @@ export const ordersAction = (product: string[]):ActionOrders =>({
     payload: product
 });
 
+
+/** Change Header*/
+type HeaderAction = {
+    type:'HEADERS',
+    payload: string
+}
+export const changeHeader = (header: string):HeaderAction =>({
+    type:'HEADERS',
+    payload: header
+});

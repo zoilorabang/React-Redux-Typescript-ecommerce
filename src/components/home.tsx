@@ -3,14 +3,15 @@ import { Link } from "react-router-dom";
 
 interface AppProps{
     products: string[],
-    addCart: (e: string[]) => void
+    addCart: (e: string[]) => void,
+    changeHeader: (e: string) => void
 }
 export const Home: React.FC<AppProps> = (props) => {
   
   const products = props.products || [];
-  
-  useEffect(()=>{
 
+  useEffect(()=>{
+    props.changeHeader('')
   },[]);
 
 
@@ -24,18 +25,19 @@ export const Home: React.FC<AppProps> = (props) => {
 
   const renderProducts = () =>{
       let prods;
-      prods = products.map((p)=>{
-        let prod: any = p;
-            return (<div className="products-card" key={prod.id}>
-                <img src="https://dummyimage.com/600x400/f34033/f3f2f7" alt="Avatar" className={'products-card-img'} />
-                <div className="products-card-container">
-                <h4><b>{prod.title}</b></h4>   
-                 <p>{strim(prod.description)}</p>
-                  <p><Link className={'products-card-button'} to={['/product/',prod.id].join('')}>BUY NOW</Link></p>
-                </div>
-            </div>);
-      });
-
+      let prod: any = products || null; 
+      if(prod.books){
+        prods = Object.keys(prod.books).map((key)=>{
+          return (<div className="products-card" key={prod.books[key].id}>
+              <img src={prod.books[key].img} alt="Avatar" className={'products-card-img'} />
+              <div className="products-card-container">
+              <h4><b>{prod.books[key].title}</b></h4>   
+                <p>{strim(prod.books[key].description)}</p>
+                <p><Link className={'products-card-button'} to={['/product/',prod.books[key].id].join('')}>BUY NOW</Link></p>
+              </div>
+          </div>);
+        });
+      }
       return prods;
   }
 

@@ -4,16 +4,20 @@ import {
 Header,
 Footer,
 Home,
-Product
+Product,
+Cart,
+MyOrders
 } from './components';
 import { useSelector, useDispatch } from 'react-redux';
 import {BaseState} from './reducers';
 import {fetchProduct} from './utilities/api';
 import {
   addToCartAction,
-  productsAction
+  productsAction,
+  changeHeader,
+  ordersAction,
+  resetCartAction
 } from './actions'
-
 
 
 
@@ -26,11 +30,32 @@ const App: React.FC<{}> = (props) => {
     (state) => state.cart
   );
 
+  const orders = useSelector<BaseState, BaseState['orders']>(
+    (state) => state.orders
+  );
+
+  const currentHeader = useSelector<BaseState, BaseState['header']>(
+    (state) => state.header
+  );
+
   const dispatch = useDispatch();
 
-  const onAddToCart = (product: string[]) =>{
+  const onAddToCart = (product: any) =>{
     dispatch(addToCartAction(product));  
   }
+
+  const resetCartAction = () =>{
+    dispatch(resetCartAction());  
+  }
+  
+  const onCheckout = (product: any) =>{
+    dispatch(ordersAction(product));  
+  }
+
+  const onHeaderChange = (header: string) =>{
+    dispatch(changeHeader(header));  
+  }
+
   const getProducts = (product: string[]) =>{
     dispatch(productsAction(product));  
   }
@@ -38,7 +63,7 @@ const App: React.FC<{}> = (props) => {
     /** fetch products */
     fetchProduct().then((r)=>{
       const response = r.parsedBody;
-      getProducts(response.books);
+      getProducts(response);
     });
   },[]);
 
@@ -46,16 +71,11 @@ const App: React.FC<{}> = (props) => {
   <React.Fragment>
         <div className="App">
             <Router>
-								<Header {...props}/>
-									<Route path="/" exact component={(props: any)=> <Home {...props} addCart={onAddToCart} products={products}/>} />
-                  <Route path="/product/:id" exact component={(props: any)=> 
-                  <Product {...props} 
-                  addCart={onAddToCart} 
-                  products={products}
-                  cart={cart}
-                  />} />
-                  <Route path="/myorders" exact component={(props: any)=> <Home addCart={onAddToCart} products={products}/>} />
-                  <Route path="/cart" exact component={(props: any)=> <Home addCart={onAddToCart} products={products}/>} />
+								<Header {...props} curHeader={currentHeader} cart={cart}/>
+									<Route path="/" exact component={(props: any)=> <Home {...props} addCart={onAddToCart} products={products} changeHeader={onHeaderChange}/>} />
+                  <Route path="/product/:id" exact component={(props: any)=> <Product {...props} addCart={onAddToCart} products={products} cart={cart} changeHeader={onHeaderChange} />} />
+                  <Route path="/myorders" exact component={(props: any)=> <MyOrders {...props} products={products} changeHeader={onHeaderChange} orders={orders}/>} />
+                  <Route path="/cart" exact component={(props: any)=> <Cart {...props} cart={cart} addCart={onAddToCart} products={products} changeHeader={onHeaderChange} checkout={onCheckout} reset={resetCartAction} myorders={orders}/>} />
 								<Footer />
 						</Router>      
         </div>

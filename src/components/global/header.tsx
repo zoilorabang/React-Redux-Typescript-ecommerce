@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 
 interface AppProps{
-
+  curHeader: any,
+  cart: string[]
 }
 export const Header: React.FC<AppProps> = (props) => {
   const mypath = window.location.pathname.split("/");
-
   const [state,setState] = useState({
     home:true,
     myorders:false,
@@ -29,11 +29,13 @@ export const Header: React.FC<AppProps> = (props) => {
   return (
     <>
 		<header className="app-header">
-      <span className="app-header-nav logo">eCommerce Site</span>
+  <span className="app-header-nav logo">eCommerce Site {(props.curHeader)?['|',props.curHeader].join(' '):''}</span>
       <div className="app-header-right">
         <Link className={["app-header-nav",(state.home)?'active':''].join(" ")} to="/" onClick={onNavChange} id="home">Home</Link>
         <Link className={["app-header-nav",(state.myorders)?'active':''].join(" ")} to="/myorders" onClick={onNavChange} id="myorders">My Orders</Link>
-        <Link className={["app-header-nav",(state.cart)?'active':''].join(" ")} to="/cart" onClick={onNavChange} id="cart">Cart</Link>
+        <Link className={["app-header-nav",(state.cart)?'active':'','notif'].join(" ")} to="/cart" onClick={onNavChange} id="cart">
+         Cart {(props.cart.length>0)?<span className="badge">{props.cart.length}</span>:''}
+          </Link>
       </div>
 		</header>
     </>

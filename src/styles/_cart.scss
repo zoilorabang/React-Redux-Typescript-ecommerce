@@ -1,0 +1,27 @@
+.order{
+    &-item{
+        display: inline-block;
+        margin-bottom: 4px;
+        background: #f1eef3;
+        & > img{
+            width: 10% !important;
+            float:left;
+        }
+        &-title {
+            padding: 5px;
+            display: inline-flex;
+            margin-top: 0px;
+            float: left;
+        }
+        &-del {
+            float: right;
+            background: #8c7070;
+            border-radius: 50%;
+            color: #fff;
+            padding: 4px;
+            font-size: 8px;
+            cursor:pointer;
+            margin: 10px 15px 4px 4px;
+        }
+    }
+}
